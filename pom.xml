@@ -36,7 +36,6 @@
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- Lets PIT run JUnit 5 tests on the same platform version -->
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-launcher</artifactId>
@@ -59,17 +58,39 @@
     <build>
         <finalName>tidewater-freight</finalName>
         <plugins>
+
+            <!-- Tests — suppress Mockito byte-buddy self-attach warning on JDK 21 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
+                <configuration>
+                    <argLine>@{argLine} -XX:+EnableDynamicAgentLoading</argLine>
+                </configuration>
             </plugin>
 
-            <!-- Coverage: mvn verify, then open target/site/jacoco/index.html -->
+            <!-- Run the demo: mvn compile exec:java -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <mainClass>com.tidewater.freight.Demo</mainClass>
+                </configuration>
+            </plugin>
+
+            <!-- Coverage gate: mvn verify fails if line or branch coverage < 90%
+                 Demo is excluded — it is a console entry point with no logic.
+                 Report: target/site/jacoco/index.html -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>com/tidewater/freight/Demo.class</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -80,11 +101,35 @@
                         <phase>verify</phase>
                         <goals><goal>report</goal></goals>
                     </execution>
+                    <execution>
+                        <id>check</id>
+                        <phase>verify</phase>
+                        <goals><goal>check</goal></goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.90</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.90</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
-            <!-- Mutation testing: mvn test-compile org.pitest:pitest-maven:mutationCoverage
-                 then open target/pit-reports/index.html -->
+            <!-- Mutation gate: mvn verify fails if PIT kill rate < 90%
+                 Demo excluded. Report: target/pit-reports/index.html -->
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
@@ -103,8 +148,20 @@
                     <targetTests>
                         <param>com.tidewater.freight.*</param>
                     </targetTests>
+                    <excludedClasses>
+                        <param>com.tidewater.freight.Demo</param>
+                    </excludedClasses>
+                    <mutationThreshold>95</mutationThreshold>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>mutation-gate</id>
+                        <phase>verify</phase>
+                        <goals><goal>mutationCoverage</goal></goals>
+                    </execution>
+                </executions>
             </plugin>
+
         </plugins>
     </build>
 </project>
