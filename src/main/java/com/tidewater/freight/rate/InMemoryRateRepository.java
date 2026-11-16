@@ -67,9 +67,15 @@ public class InMemoryRateRepository implements RateRepository {
                         "rates.properties: zone '" + zone
                         + "' must have format 'ratePerKg, flatFee', got: " + value);
             }
-            BigDecimal rate = new BigDecimal(parts[0].trim());
-            BigDecimal fee  = new BigDecimal(parts[1].trim());
-            map.put(zone, new ZoneRate(rate, fee));
+            try {
+                BigDecimal rate = new BigDecimal(parts[0].trim());
+                BigDecimal fee = new BigDecimal(parts[1].trim());
+                map.put(zone, new ZoneRate(rate, fee));
+            } catch (NumberFormatException e) {
+                throw new IllegalStateException(
+                        "rates.properties: zone '" + zone
+                        + "' has malformed numeric value: " + value, e);
+            }
         }
         return new InMemoryRateRepository(map);
     }

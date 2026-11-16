@@ -145,7 +145,7 @@ PIT was run on both the starter code and the refactored code:
 
 | Metric | Starter (before) | Refactored (after) |
 |---|---|---|
-| Tests | 3 (none could fail) | 82, all passing |
+| Tests | 3 (none could fail) | 77, all passing |
 | Mutations generated | 18 | 46 |
 | Mutations killed | 3 (17%) | **46 (100%)** |
 | Line coverage | 20/33 (61%) | 108/116 (93%) |

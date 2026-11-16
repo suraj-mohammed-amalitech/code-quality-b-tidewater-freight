@@ -9,31 +9,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class DefaultPricingRulesTest {
 
     @Test
-    void createReturnsFourRules() {
+    void createReturnsFourRulesInCorrectOrder() {
         List<PricingRule> rules = DefaultPricingRules.create();
-        assertEquals(4, rules.size());
-    }
-
-    @Test
-    void firstRuleIsBasePriceRule() {
-        assertInstanceOf(BasePriceRule.class, DefaultPricingRules.create().get(0));
-    }
-
-    @Test
-    void secondRuleIsZoneFeeRule() {
-        assertInstanceOf(ZoneFeeRule.class, DefaultPricingRules.create().get(1));
-    }
-
-    @Test
-    void thirdRuleIsHeavyItemSurchargeRule() {
-        assertInstanceOf(HeavyItemSurchargeRule.class, DefaultPricingRules.create().get(2));
-    }
-
-    @Test
-    void lastRuleIsServiceLevelRule() {
-        List<PricingRule> rules = DefaultPricingRules.create();
-        assertInstanceOf(ServiceLevelRule.class, rules.get(rules.size() - 1),
-                "ServiceLevelRule must be last — express multiplies all prior fees");
+        
+        assertEquals(4, rules.size(), "Should have exactly 4 rules");
+        assertInstanceOf(BasePriceRule.class, rules.get(0),
+                "First rule must be BasePriceRule");
+        assertInstanceOf(ZoneFeeRule.class, rules.get(1),
+                "Second rule must be ZoneFeeRule");
+        assertInstanceOf(HeavyItemSurchargeRule.class, rules.get(2),
+                "Third rule must be HeavyItemSurchargeRule");
+        assertInstanceOf(ServiceLevelRule.class, rules.get(3),
+                "Fourth rule must be ServiceLevelRule — express multiplies all prior fees");
     }
 
     @Test

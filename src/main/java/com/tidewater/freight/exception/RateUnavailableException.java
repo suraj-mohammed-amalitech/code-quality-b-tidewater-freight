@@ -11,6 +11,10 @@ package com.tidewater.freight.exception;
  */
 public class RateUnavailableException extends ShippingException {
 
+    public RateUnavailableException(String message) {
+        super(message);
+    }
+
     public RateUnavailableException(String message, Throwable cause) {
         super(message, cause);
     }

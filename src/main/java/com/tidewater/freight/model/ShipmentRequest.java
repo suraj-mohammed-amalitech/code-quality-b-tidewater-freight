@@ -16,8 +16,8 @@ import java.math.BigDecimal;
  */
 public final class ShipmentRequest {
 
-    private final String       zone;
-    private final BigDecimal   weightKg;
+    private final String zone;
+    private final BigDecimal weightKg;
     private final ServiceLevel serviceLevel;
 
     /**
@@ -52,8 +52,8 @@ public final class ShipmentRequest {
         if (serviceLevel == null) {
             throw new InvalidShipmentException("Service level must not be null");
         }
-        this.zone         = zone;
-        this.weightKg     = weightKg;
+        this.zone = zone;
+        this.weightKg = weightKg;
         this.serviceLevel = serviceLevel;
     }
 

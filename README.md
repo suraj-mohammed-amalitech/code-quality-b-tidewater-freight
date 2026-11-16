@@ -15,7 +15,7 @@
 mvn clean test
 ```
 
-Expected: `Tests run: 82, Failures: 0, Errors: 0, Skipped: 0`
+Expected: `Tests run: 77, Failures: 0, Errors: 0, Skipped: 0`
 
 ---
 
@@ -233,7 +233,7 @@ src/
 
 | Metric                  | Starter (inherited) | Refactored        |
 |-------------------------|---------------------|-------------------|
-| Tests                   | 3 (none could fail) | 82, all passing   |
+| Tests                   | 3 (none could fail) | 77, all passing   |
 | PIT mutations generated | 18                  | 46                |
 | PIT mutations killed    | 3 (17%)             | **46 (100%)**     |
 | Line coverage           | 20/33 (61%)         | 108/116 (93%)     |

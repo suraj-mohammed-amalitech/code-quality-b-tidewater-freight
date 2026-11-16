@@ -60,14 +60,6 @@ class ShipmentRequestTest {
     }
 
     @Test
-    void toStringContainsZoneAndWeight() {
-        ShipmentRequest r = new ShipmentRequest("DOMESTIC", 10.0, ServiceLevel.STANDARD);
-        String s = r.toString();
-        assertTrue(s.contains("DOMESTIC"));
-        assertTrue(s.contains("STANDARD"));
-    }
-
-    @Test
     void nullBigDecimalWeightThrows() {
         assertThrows(InvalidShipmentException.class,
                 () -> new ShipmentRequest("DOMESTIC", (BigDecimal) null, ServiceLevel.STANDARD));

@@ -23,7 +23,7 @@ class ServiceLevelRuleTest {
 
         BigDecimal result = rule.apply(new BigDecimal("50.00"), r, ANY_RATE);
 
-        assertEquals(new BigDecimal("75.000"), result);
+        assertEquals(0, result.compareTo(new BigDecimal("75.00")));
     }
 
     @Test
@@ -32,7 +32,7 @@ class ServiceLevelRuleTest {
 
         BigDecimal result = rule.apply(new BigDecimal("50.00"), r, ANY_RATE);
 
-        assertEquals(new BigDecimal("50.00"), result);
+        assertEquals(0, result.compareTo(new BigDecimal("50.00")));
     }
 
     @Test

@@ -84,13 +84,11 @@ public class ShippingCalculator {
             ZoneRate rate = rateRepository.findRate(zone);
             if (rate == null) {
                 throw new RateUnavailableException(
-                        "Repository returned null for zone: " + zone, null);
+                        "Repository returned null for zone: " + zone);
             }
             return rate;
-        } catch (UnknownZoneException e) {
-            throw e;                        // propagate as-is — it carries the zone name
         } catch (ShippingException e) {
-            throw e;                        // already a domain exception — pass through
+            throw e;
         } catch (Exception e) {
             throw new RateUnavailableException(
                     "Could not retrieve rate for zone: " + zone, e);
