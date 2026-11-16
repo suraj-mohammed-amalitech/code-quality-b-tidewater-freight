@@ -1,5 +1,47 @@
 # Tidewater Freight — Code Analysis
 
+## 0. Before-evidence — running the starter code
+
+These three commands were run against the original starter code before any
+changes. The outputs are the evidence that the code and its tests are not
+production-ready.
+
+### `mvn clean test`
+
+```
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS
+```
+
+All green. At a glance it looks done.
+
+### `mvn compile exec:java -Dexec.mainClass=com.tidewater.freight.Demo`
+
+```
+Shipping DOMESTIC (10.0kg, STANDARD): GHS 50.0
+Result DOMESTIC 10kg STANDARD       -> 50.0
+Shipping INTERNATIONAL (40.0kg, EXPRESS): GHS 967.5
+Result INTERNATIONAL 40kg EXPRESS   -> 967.5
+Result unknown zone MOON 10kg STD   -> 0.0
+```
+
+The unknown zone `MOON` returns `0.0` instead of an error. The swallowed
+exception makes a failure look like a free shipment.
+
+### `mvn test-compile org.pitest:pitest-maven:mutationCoverage`
+
+```
+Generated 18 mutations Killed 3 (17%)
+Line Coverage: 20/33 (61%)
+Test strength: 27%
+```
+
+Only 3 of 18 mutants killed. Flipping `*` to `/`, `+` to `-`, changing the
+zone fee, or deleting the `System.out.println` all passed the suite unchanged.
+The tests were green but proved almost nothing.
+
+---
+
 ## 1. What is wrong with the inherited code
 
 ### 1.1 Code smells and anti-patterns
